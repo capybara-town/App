@@ -4,7 +4,8 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5aea45e9-f2a3-4356-9e76-e0c72655e4fe" name="Changes" comment="hi hi hi hi">
+    <list default="true" id="5aea45e9-f2a3-4356-9e76-e0c72655e4fe" name="Changes" comment="hi hi hi hi hi hi">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -72,7 +73,21 @@
       <option name="project" value="LOCAL" />
       <updated>1692958642280</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="hi hi hi hi">
+      <created>1692961549206</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1692961549206</updated>
+    </task>
+    <task id="LOCAL-00006" summary="hi hi hi hi hi hi">
+      <created>1692961835787</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1692961835787</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -97,12 +112,14 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="hi" />
     <MESSAGE value="hi hi" />
     <MESSAGE value="hi hi hi" />
     <MESSAGE value="hi hi hi hi" />
-    <option name="LAST_COMMIT_MESSAGE" value="hi hi hi hi" />
+    <MESSAGE value="hi hi hi hi hi hi" />
+    <option name="LAST_COMMIT_MESSAGE" value="hi hi hi hi hi hi" />
   </component>
 </project>
