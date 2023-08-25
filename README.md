@@ -1,6 +1,6 @@
 # capybara
 
-A new Flutter project. hihi hihi
+A new Flutter project.
 
 ## Getting Started
 
