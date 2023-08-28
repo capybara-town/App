@@ -1,4 +1,5 @@
 import 'package:capybara/src/config/routes.dart';
+import 'package:capybara/src/provider/festival_provider.dart';
 import 'package:capybara/src/theme/color_theme.dart';
 import 'package:capybara/src/theme/font_theme.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -8,6 +9,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../../component/bounce.dart';
 import '../../component/bounce_grey.dart';
@@ -18,27 +21,29 @@ class FestivalScreen extends HookWidget {
 
   final db = FirebaseFirestore.instance;
 
-  Future<QuerySnapshot<Map<String, dynamic>>> getFestivals() async {
-    return db.collection("festivals").get();
-  }
-
-  Future<DocumentSnapshot<Map<String, dynamic>>> getFestivalConfig() async {
-    return db.collection("config").doc("festival").get();
-  }
-
   @override
   Widget build(BuildContext context) {
+
+    final FestivalProvider festivalProvider = Provider.of<FestivalProvider>(context);
 
     final carouselController = useState(CarouselController());
     final carouselPage = useState(0);
 
-    final snapshot = useFuture(getFestivals());
-    final festivalConfigSnapshot = useFuture(getFestivalConfig());
+    final snapshot = useFuture(festivalProvider.getFestivals());
+    final festivalConfigSnapshot = useFuture(festivalProvider.getFestivalConfig());
 
-    List<Map<String, dynamic>> festivals = snapshot.data!.docs.map((e) => e.data()).toList();
-    Map<String, dynamic> festivalConfig = festivalConfigSnapshot.data!.data() as Map<String, dynamic>;
+    List<Map<String, dynamic>> festivals = [];
+    Map<String, dynamic> festivalConfig = {};
+    Map<String, dynamic> groupFestivals = {};
 
-    Map<String, dynamic> groupFestivals = groupBy(festivals, (Map obj) => obj['category']);
+    if (!(snapshot.hasError) && snapshot.hasData) {
+      festivals = snapshot.data!.docs.map((e) => e.data()).toList();
+      groupFestivals = groupBy(festivals, (Map obj) => obj['category']);
+    }
+
+    if (!(festivalConfigSnapshot.hasError) && festivalConfigSnapshot.hasData) {
+      festivalConfig = festivalConfigSnapshot.data!.data() as Map<String, dynamic>;
+    }
 
     return SafeArea(
       bottom: false,
@@ -47,9 +52,9 @@ class FestivalScreen extends HookWidget {
           (festivalConfigSnapshot.hasData && snapshot.hasData) ?
               Column(
                 children: [
-                  tabBar(carouselController, carouselPage, festivalConfig),
+                  tabBar(carouselController.value, carouselPage, festivalConfig),
                   Expanded(
-                    child: tabContent(carouselController, carouselPage, snapshot.data!.docs, festivalConfigSnapshot.data!.data() as Map<String, dynamic>, groupFestivals)
+                    child: tabContent(carouselController.value, carouselPage, snapshot.data!.docs, festivalConfigSnapshot.data!.data() as Map<String, dynamic>, groupFestivals)
                   )
                 ]
               ) :
@@ -57,7 +62,7 @@ class FestivalScreen extends HookWidget {
     );
   }
 
-  Widget tabBar(ValueNotifier<CarouselController> carouselController, ValueNotifier<int> carouselPage, Map<String, dynamic> festivalConfig) {
+  Widget tabBar(CarouselController carouselController, ValueNotifier<int> carouselPage, Map<String, dynamic> festivalConfig) {
 
     return Container(
       height: 60,
@@ -81,7 +86,7 @@ class FestivalScreen extends HookWidget {
               duration: const Duration(milliseconds: 100),
               child: BounceGrey(
                   onTap: () {
-                    carouselController.value.animateToPage(itemIndex, duration: const Duration(milliseconds: 200), curve: Curves.easeOutCirc);
+                    carouselController.animateToPage(itemIndex, duration: const Duration(milliseconds: 200), curve: Curves.easeOutCirc);
                     carouselPage.value = itemIndex;
                   },
                   activeColor: ColorTheme.greyThickest,
@@ -90,7 +95,7 @@ class FestivalScreen extends HookWidget {
                   radius: 5,
                   scale: 0.8,
                   child: Container(
-                    color: Colors.transparent,
+                    color: ColorTheme.greyThickest.withOpacity(0),
                     padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                     child: Center(child: Text(festivalConfig['value'][itemIndex].toString(), style: carouselPage.value == itemIndex ? FontTheme.subtitle1WhiteBold : FontTheme.subtitle1GreyBold)),
                   )
@@ -101,7 +106,7 @@ class FestivalScreen extends HookWidget {
     );
   }
 
-  Widget tabContent(ValueNotifier<CarouselController> carouselController, ValueNotifier<int> carouselPage, List<QueryDocumentSnapshot<Map<String, dynamic>>> festivalsSnapshot, Map<String, dynamic> festivalConfig, Map<String, dynamic> festivals) {
+  Widget tabContent(CarouselController carouselController, ValueNotifier<int> carouselPage, List<QueryDocumentSnapshot<Map<String, dynamic>>> festivalsSnapshot, Map<String, dynamic> festivalConfig, Map<String, dynamic> festivals) {
 
     return CarouselSlider.builder(
         options: CarouselOptions(
@@ -110,7 +115,7 @@ class FestivalScreen extends HookWidget {
           enableInfiniteScroll: false,
           scrollPhysics: const NeverScrollableScrollPhysics()
         ),
-        carouselController: carouselController.value,
+        carouselController: carouselController,
         itemCount: festivalConfig['value'].length,
         itemBuilder: (context, itemIndex, pageViewIndex) {
           return Padding(
@@ -132,7 +137,7 @@ class FestivalScreen extends HookWidget {
 
     return Bounce(
       onTap: () {
-        context.push(Routes.FESTIVAL_INFO, extra: {"pk": festivalSnapshot.id});
+        context.push(Routes.FESTIVAL_INFO, extra: {"pk": festivalInfo.pk});
       },
       child: Container(
         padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
@@ -149,7 +154,7 @@ class FestivalScreen extends HookWidget {
             const SizedBox(height: 10),
             Text(festivalInfo.summary, style: FontTheme.subtitle1,),
             const SizedBox(height: 10),
-            Text("${festivalInfo.startDate.toString()} ~ ${festivalInfo.endDate.toString()}", style: FontTheme.subtitle2),
+            Text("${DateFormat.yMMMd('en_US').format(festivalInfo.startDate)} ${DateFormat.Hm('en_US').format(festivalInfo.startDate)} ~ ${DateFormat.yMMMd('en_US').format(festivalInfo.endDate)} ${DateFormat.Hm('en_US').format(festivalInfo.endDate)}", style: FontTheme.subtitle2),
             const SizedBox(height: 15),
             Row(
               children: [

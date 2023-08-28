@@ -5,7 +5,7 @@ class FestivalMeet {
   final String description;
   final DateTime startDate;
   final DateTime endDate;
-  final List<String> members;
+  final List<dynamic> members;
   final int limit;
 
   FestivalMeet({
