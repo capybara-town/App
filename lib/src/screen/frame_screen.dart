@@ -9,7 +9,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 import '../component/bounce_grey.dart';
-import '../provider/ui_provider.dart';
 
 class FrameScreen extends HookWidget {
   const FrameScreen({super.key});

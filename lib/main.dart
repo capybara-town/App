@@ -1,13 +1,8 @@
 import 'package:capybara/firebase_options.dart';
 import 'package:capybara/src/config/routes.dart';
-import 'package:capybara/src/provider/ui_provider.dart';
-import 'package:capybara/src/screen/festival/festival_info_screen.dart';
-import 'package:capybara/src/screen/frame_screen.dart';
-import 'package:capybara/src/screen/bnb/home_screen.dart';
-import 'package:capybara/src/screen/login/login_screen.dart';
+import 'package:capybara/src/provider/festival_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -18,7 +13,7 @@ void main() async {
   runApp(
       MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => UiProvider()),
+            ChangeNotifierProvider(create: (_) => FestivalProvider()),
           ],
           child: const App()
       )

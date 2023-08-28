@@ -32,6 +32,7 @@ class SecondScreen extends StatelessWidget {
 
               db.collection('festivals').doc(newId).set(
                 FestivalInfo(
+                  pk: newId,
                   category: "기획",
                   thumbnail: "https://dev-event.vercel.app/_next/image?url=https%3A%2F%2Fbrave-people-3.s3.ap-northeast-2.amazonaws.com%2FDEVEVENT%2F2023-08-03-20-37-2614-e20e43b1.png&w=640&q=75",
                   title: "1st NE(O)RDINARY DemoDAY",

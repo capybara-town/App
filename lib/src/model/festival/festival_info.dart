@@ -1,4 +1,5 @@
 class FestivalInfo {
+  final String pk;
   final String category;
   final String thumbnail;
   final String title;
@@ -12,6 +13,7 @@ class FestivalInfo {
   final List<dynamic> member;
 
   FestivalInfo({
+    required this.pk,
     required this.category,
     required this.thumbnail,
     required this.title,
@@ -27,6 +29,7 @@ class FestivalInfo {
 
   factory FestivalInfo.fromJson(Map<String, dynamic> json) {
     return FestivalInfo(
+      pk: json['pk'],
       category: json['category'],
       thumbnail: json['thumbnail'],
       title: json['title'],
@@ -43,6 +46,7 @@ class FestivalInfo {
 
   Map<String, dynamic> toJson() {
     return {
+      "pk": pk,
       "category": category,
       "thumbnail": thumbnail,
       "title": title,
