@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../theme/theme.dart';
+import '../theme/color_theme.dart';
 
 class BounceGrey extends StatefulWidget {
   const BounceGrey({
@@ -13,7 +13,7 @@ class BounceGrey extends StatefulWidget {
     this.scale = 0.95,
     this.paddingHorizontal = 20,
     this.paddingVertical = 15,
-    this.activeColor = ColorTheme.greyLightest,
+    this.activeColor = ColorTheme.greyThick,
     this.radius = 15
   }) : super(key: key);
 

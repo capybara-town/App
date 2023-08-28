@@ -1,4 +1,4 @@
-import 'package:capybara/src/theme/theme.dart';
+import 'package:capybara/src/theme/color_theme.dart';
 import 'package:flutter/cupertino.dart';
 
 class LoginScreen extends StatelessWidget {

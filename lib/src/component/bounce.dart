@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 
-import '../theme/theme.dart';
+import '../theme/color_theme.dart';
 
 class Bounce extends StatefulWidget {
   const Bounce({

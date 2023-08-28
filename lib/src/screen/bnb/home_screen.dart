@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../../theme/theme.dart';
+import '../../theme/color_theme.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);

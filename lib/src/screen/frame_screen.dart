@@ -1,72 +1,67 @@
 import 'package:capybara/src/screen/bnb/home_screen.dart';
 import 'package:capybara/src/screen/bnb/second_screen.dart';
-import 'package:capybara/src/screen/bnb/third_screen.dart';
+import 'package:capybara/src/screen/festival/festival_screen.dart';
 import 'package:capybara/src/screen/login/login_screen.dart';
-import 'package:capybara/src/theme/theme.dart';
+import 'package:capybara/src/theme/color_theme.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 import '../component/bounce_grey.dart';
 import '../provider/ui_provider.dart';
 
-class FrameScreen extends StatelessWidget {
-  const FrameScreen({Key? key}) : super(key: key);
+class FrameScreen extends HookWidget {
+  const FrameScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
 
-    UiProvider uiProvider = Provider.of<UiProvider>(context);
-    PageController frameController = PageController();
+    final pageIndex = useState(0);
 
     return CupertinoPageScaffold(
-      backgroundColor: ColorTheme.white,
+      backgroundColor: ColorTheme.blackPoint,
       child: Column(
         children: [
           Expanded(
-            child: PageView(
-              physics: const NeverScrollableScrollPhysics(),
-              controller: frameController,
-              children: const [
-                HomeScreen(),
-                SecondScreen(),
-                ThirdScreen()
+            child: IndexedStack(
+              index: pageIndex.value,
+              children: [
+                const HomeScreen(),
+                const SecondScreen(),
+                FestivalScreen()
               ]
             )
           ),
-          bnb(uiProvider, frameController)
+          bnb(pageIndex)
         ]
       )
     );
   }
 
-  Widget bnb(UiProvider uiProvider, PageController frameController) {
+  Widget bnb(ValueNotifier pageIndex) {
     return Container(
         width: double.infinity,
-        color: ColorTheme.blackPoint,
+        color: ColorTheme.greyThickest,
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 13),
         child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              item("행사", uiProvider, 0, "map-pin-inact.svg", frameController),
-              item("신청", uiProvider, 1, "squares-2x2-inact.svg", frameController),
-              item("프로필", uiProvider, 2, "squares-2x2-inact.svg", frameController),
+              item("그룹", 0, pageIndex.value == 0 ? "map-pin-solid.svg" : "map-pin-outline.svg", pageIndex),
+              item("탐색", 1, pageIndex.value == 1 ? "squares-2x2-solid.svg" : "squares-2x2-outline.svg", pageIndex),
+              item("행사", 2, pageIndex.value == 2 ? "ticket-solid.svg" : "ticket-outline.svg", pageIndex),
             ]
         )
     );
   }
 
-  Widget item(String text, UiProvider uiProvider, int index, String icon, PageController frameController) {
+  Widget item(String text, int index, String icon, ValueNotifier pageIndex) {
     return BounceGrey(
       onTap: () {
-        frameController.animateToPage(
-          index,
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeOutCirc
-        );
+        pageIndex.value = index;
       },
       scale: 0.8,
-      activeColor: ColorTheme.blackLight,
+      activeColor: ColorTheme.greyThick,
       paddingVertical: 10,
       paddingHorizontal: 15,
       child: Column(
@@ -74,7 +69,7 @@ class FrameScreen extends StatelessWidget {
           children: [
             SvgPicture.asset("asset/image/$icon", width: 25),
             const SizedBox(height: 5,),
-            Text(text, style: const TextStyle(fontWeight: FontWeight.w600, color: ColorTheme.white, fontSize: 10),)
+            Text(text, style: const TextStyle(fontWeight: FontWeight.w600, color: ColorTheme.white, fontSize: 10))
           ]
       ),
     );

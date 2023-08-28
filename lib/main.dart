@@ -1,11 +1,20 @@
+import 'package:capybara/firebase_options.dart';
+import 'package:capybara/src/config/routes.dart';
 import 'package:capybara/src/provider/ui_provider.dart';
+import 'package:capybara/src/screen/festival/festival_info_screen.dart';
 import 'package:capybara/src/screen/frame_screen.dart';
 import 'package:capybara/src/screen/bnb/home_screen.dart';
 import 'package:capybara/src/screen/login/login_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform
+  );
   runApp(
       MultiProvider(
           providers: [
@@ -21,12 +30,10 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoApp(
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const FrameScreen(),
-        '/login': (context) => const LoginScreen(),
-      },
+    return CupertinoApp.router(
+      routeInformationProvider: router.routeInformationProvider,
+      routeInformationParser: router.routeInformationParser,
+      routerDelegate: router.routerDelegate,
     );
   }
 }
