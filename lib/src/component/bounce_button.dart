@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../theme/theme.dart';
+import '../theme/color_theme.dart';
 
 class BounceButton extends StatefulWidget {
   const BounceButton({
@@ -13,11 +13,11 @@ class BounceButton extends StatefulWidget {
     this.height = 70,
     this.scale = 0.95,
     required this.text,
-    this.activeColor = ColorTheme.blueThick,
-    this.color = ColorTheme.bluePoint,
+    this.activeColor = ColorTheme.capybaraPoint,
+    this.color = ColorTheme.capybaraPoint,
     this.textStyle = const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
     this.active = true,
-    this.inactiveColor = ColorTheme.greyLight
+    this.inactiveColor = ColorTheme.greyLightest
   }) : super(key: key);
 
   final Function() onTap;
