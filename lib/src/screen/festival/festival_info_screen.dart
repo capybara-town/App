@@ -260,7 +260,7 @@ class FestivalInfoScreen extends HookWidget {
             )
           ]
         );
-      },
+      }
     );
   }
 }
