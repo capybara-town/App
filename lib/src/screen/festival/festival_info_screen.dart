@@ -1,10 +1,12 @@
 import 'package:capybara/src/component/bounce.dart';
 import 'package:capybara/src/model/festival/festival_meet.dart';
+import 'package:capybara/src/model/user.dart';
 import 'package:capybara/src/provider/festival_provider.dart';
 import 'package:capybara/src/theme/color_theme.dart';
 import 'package:capybara/src/theme/font_theme.dart';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -27,8 +29,10 @@ class FestivalInfoScreen extends HookWidget {
     final FestivalProvider festivalProvider = Provider.of<FestivalProvider>(context);
 
     // pk로 데이터 불러오기
-    final festivalInfoSnapshot = useFuture(festivalProvider.getFestivalInfo(pk));
-    final festivalMeetSnapshot = useFuture(festivalProvider.getFestivalMeet(pk));
+    final festivalInfoFuture = useMemoized(() => festivalProvider.getFestivalInfo(pk));
+    final festivalMeetFuture = useMemoized(() => festivalProvider.getFestivalMeet(pk));
+    final festivalInfoSnapshot = useFuture(festivalInfoFuture);
+    final festivalMeetSnapshot = useFuture(festivalMeetFuture);
 
     FestivalInfo festivalInfo = FestivalInfo(pk: "", category: "", thumbnail: "", title: "", startDate: DateTime.now(), endDate: DateTime.now(), summary: "", description: "", location: "", locationName: "", fee: 0, member: []);
     List<FestivalMeet> festivalMeets = [];
@@ -94,7 +98,8 @@ class FestivalInfoScreen extends HookWidget {
                           carouselController: carouselController.value,
                           items: [
                             info(festivalInfo),
-                            meets(festivalMeets)
+                            meets(festivalMeets),
+                            members(festivalInfo.member, festivalProvider)
                           ],
                         )
                       )
@@ -238,29 +243,71 @@ class FestivalInfoScreen extends HookWidget {
     );
   }
 
-  Widget members(List<String> members, FestivalProvider festivalProvider) {
+  Widget members(List<dynamic> members, FestivalProvider festivalProvider) {
 
-    final membersData = useFuture(festivalProvider.getUsers(members));
+    final memberFuture = useMemoized(() => festivalProvider.getUsers(members));
+    final membersData = useFuture(memberFuture);
 
-    return ListView.builder(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-      itemCount: 3,
-      itemBuilder: (context, index) {
-        Row(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(50),
-              child: Image.network("", width: 50, height: 50)
-            ),
-            const SizedBox(width: 10),
-            Column(
-              children: [
-                Text(members[index])
-              ]
-            )
-          ]
-        );
-      }
-    );
+    List<User> membersMap = [];
+
+    if (!(membersData.hasError) && membersData.hasData) {
+      membersMap = membersData.data!.docs.map((e) => User.fromJson(e.data())).toList();
+    }
+
+    return (membersData.hasError) ?
+        const Center(child: Text("error has occurred", style: FontTheme.subtitle2,)) :
+        (membersData.hasData) ?
+            ListView.builder(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              itemCount: membersMap.length,
+              itemBuilder: (context, index) {
+                User member = membersMap[index];
+                return Row(
+                  children: [
+                    ExtendedImage.network(
+                      member.profileImage,
+                      width: 50,
+                      height: 50,
+                      cache: true,
+                      fit: BoxFit.cover,
+                      shape: BoxShape.circle,
+                      loadStateChanged: (state) {
+                        switch (state.extendedImageLoadState) {
+                          case LoadState.loading:
+                            return Container(
+                              width: 50,
+                              height: 50,
+                              color: ColorTheme.greyThickest,
+                            );
+                          case LoadState.completed:
+                            return ExtendedRawImage(
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                              image: state.extendedImageInfo?.image,
+                            );
+                          case LoadState.failed:
+                            return Container(
+                              width: 50,
+                              height: 50,
+                              color: ColorTheme.greyThickest,
+                            );
+                        }
+                      },
+                    ),
+                    const SizedBox(width: 15),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(membersMap[index].nickname, style: FontTheme.subtitle2Bold,),
+                        const SizedBox(height: 5),
+                        Text("${member.role} @${member.belong}", style: FontTheme.subtitle2GreyLightest,)
+                      ],
+                    ),
+                  ],
+                );
+              },
+            ):
+            const Center(child: CircularProgressIndicator());
   }
 }

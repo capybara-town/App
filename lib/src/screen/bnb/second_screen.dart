@@ -1,8 +1,10 @@
 import 'package:capybara/src/model/festival/festival_info.dart';
 import 'package:capybara/src/model/festival/festival_meet.dart';
+import 'package:capybara/src/provider/festival_provider.dart';
 import 'package:capybara/src/theme/font_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'package:random_password_generator/random_password_generator.dart';
 
 import '../../component/bounce_grey.dart';

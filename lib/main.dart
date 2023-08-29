@@ -3,10 +3,14 @@ import 'package:capybara/src/config/routes.dart';
 import 'package:capybara/src/provider/festival_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: '.env');
+  KakaoSdk.init(nativeAppKey: dotenv.get("KAKAO_NATIVE_API"));
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform
   );
