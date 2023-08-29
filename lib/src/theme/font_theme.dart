@@ -14,6 +14,8 @@ class FontTheme {
   static const TextStyle subtitle1WhiteBold = TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: ColorTheme.white);
   static const TextStyle subtitle1GreyBold = TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: ColorTheme.greyPoint);
   static const TextStyle subtitle1BlackBold = TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: ColorTheme.blackPoint);
+  static const TextStyle subtitle2Bold = TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: ColorTheme.white);
+  static const TextStyle subtitle2GreyLightest = TextStyle(fontSize: 14, fontWeight: FontWeight.w300, color: ColorTheme.greyLightest);
   static const TextStyle subtitle2Point = TextStyle(fontSize: 14, fontWeight: FontWeight.w300, color: ColorTheme.capybaraPoint);
   static const TextStyle subtitle2PointBold = TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: ColorTheme.capybaraPoint);
 

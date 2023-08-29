@@ -22,6 +22,8 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+def kakaoNativeApiKey = localProperties.getProperty('KAKAO_NATIVE_API_KEY')
+
 android {
     namespace "team.capybara.capybara.capybara"
     compileSdkVersion flutter.compileSdkVersion
@@ -45,11 +47,12 @@ android {
         applicationId "team.capybara.capybara.capybara"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 21
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
+        manifestPlaceholders["kakaoNativeApiKey"] = kakaoNativeApiKey
     }
 
     buildTypes {

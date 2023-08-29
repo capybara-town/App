@@ -29,8 +29,10 @@ class FestivalScreen extends HookWidget {
     final carouselController = useState(CarouselController());
     final carouselPage = useState(0);
 
-    final snapshot = useFuture(festivalProvider.getFestivals());
-    final festivalConfigSnapshot = useFuture(festivalProvider.getFestivalConfig());
+    final snapshotFuture = useMemoized(() => festivalProvider.getFestivals());
+    final festivalConfigFuture = useMemoized(() => festivalProvider.getFestivalConfig());
+    final snapshot = useFuture(snapshotFuture);
+    final festivalConfigSnapshot = useFuture(festivalConfigFuture);
 
     List<Map<String, dynamic>> festivals = [];
     Map<String, dynamic> festivalConfig = {};
@@ -44,6 +46,8 @@ class FestivalScreen extends HookWidget {
     if (!(festivalConfigSnapshot.hasError) && festivalConfigSnapshot.hasData) {
       festivalConfig = festivalConfigSnapshot.data!.data() as Map<String, dynamic>;
     }
+
+    print("hi!!!");
 
     return SafeArea(
       bottom: false,

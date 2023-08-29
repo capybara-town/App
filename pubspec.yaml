@@ -45,6 +45,9 @@ dependencies:
   random_password_generator: ^0.2.1
   collection: ^1.18.0
   intl: ^0.18.1
+  extended_image: ^8.1.0
+  kakao_flutter_sdk: ^1.5.0
+  flutter_dotenv: ^5.1.0
 
 dev_dependencies:
   flutter_test:
@@ -70,7 +73,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-   - asset/image/
+    - .env
+    - asset/image/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
