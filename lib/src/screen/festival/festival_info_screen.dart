@@ -44,13 +44,27 @@ class FestivalInfoScreen extends HookWidget {
     final carouselController = useState(CarouselController());
     final carouselPage = useState(0);
 
-    return CupertinoPageScaffold(
+    return Scaffold(
       backgroundColor: ColorTheme.blackPoint,
-      child: Stack(
+      floatingActionButton: AnimatedScale(
+        duration: const Duration(milliseconds: 400),
+        scale: carouselPage.value == 1 ? 1 : 0,
+        curve: Curves.easeOutCirc,
+        child: AnimatedOpacity(
+          duration: const Duration(milliseconds: 300),
+          opacity: carouselPage.value == 1 ? 1 : 0,
+          curve: Curves.easeOutCirc,
+          child: FloatingActionButton(
+            child: const Icon(Icons.abc),
+            onPressed: () {},
+          )
+        )
+      ),
+      body: Stack(
         children: [
-          (festivalInfoSnapshot.hasError) ?
+          (festivalInfoSnapshot.hasError && festivalMeetSnapshot.hasError) ?
               const Center(child: Text("error has occured")) :
-              (festivalInfoSnapshot.hasData) ?
+              (festivalInfoSnapshot.hasData && festivalMeetSnapshot.hasData) ?
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -221,6 +235,32 @@ class FestivalInfoScreen extends HookWidget {
           )
         );
       },
+    );
+  }
+
+  Widget members(List<String> members, FestivalProvider festivalProvider) {
+
+    final membersData = useFuture(festivalProvider.getUsers(members));
+
+    return ListView.builder(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+      itemCount: 3,
+      itemBuilder: (context, index) {
+        Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(50),
+              child: Image.network("", width: 50, height: 50)
+            ),
+            const SizedBox(width: 10),
+            Column(
+              children: [
+                Text(members[index])
+              ]
+            )
+          ]
+        );
+      }
     );
   }
 }

@@ -19,4 +19,8 @@ class FestivalProvider extends ChangeNotifier {
   Future<QuerySnapshot<Map<String, dynamic>>> getFestivalMeet(String pk) async {
     return db.collection("festivals").doc(pk).collection("meet").get();
   }
+
+  Future<QuerySnapshot<Map<String, dynamic>>> getUsers(List<String> users) async {
+    return db.collection("users").where('uid', whereIn: users).get();
+}
 }
