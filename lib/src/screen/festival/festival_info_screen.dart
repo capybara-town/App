@@ -1,4 +1,5 @@
 import 'package:capybara/src/component/bounce.dart';
+import 'package:capybara/src/component/zero_content.dart';
 import 'package:capybara/src/model/festival/festival_meet.dart';
 import 'package:capybara/src/model/user.dart';
 import 'package:capybara/src/provider/festival_provider.dart';
@@ -35,14 +36,9 @@ class FestivalInfoScreen extends HookWidget {
     final festivalMeetSnapshot = useFuture(festivalMeetFuture);
 
     FestivalInfo festivalInfo = FestivalInfo(pk: "", category: "", thumbnail: "", title: "", startDate: DateTime.now(), endDate: DateTime.now(), summary: "", description: "", location: "", locationName: "", fee: 0, member: []);
-    List<FestivalMeet> festivalMeets = [];
 
     if (!(festivalInfoSnapshot.hasError) && festivalInfoSnapshot.hasData) {
       festivalInfo = FestivalInfo.fromJson(festivalInfoSnapshot.data!.data() as Map<String, dynamic>);
-    }
-
-    if (!(festivalMeetSnapshot.hasError) && festivalInfoSnapshot.hasData) {
-      festivalMeets = festivalMeetSnapshot.data!.docs.map((e) => FestivalMeet.fromJson(e.data())).toList();
     }
 
     final carouselController = useState(CarouselController());
@@ -79,9 +75,9 @@ class FestivalInfoScreen extends HookWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(festivalInfo.title, style: FontTheme.headline3),
+                            Text(festivalInfo.title, style: FontTheme.subtitle1WhiteBold),
                             const SizedBox(height: 10),
-                            Text("${DateFormat.yMMMd('en_US').format(festivalInfo.startDate)} ${DateFormat.Hm('en_US').format(festivalInfo.startDate)} ~ ${DateFormat.yMMMd('en_US').format(festivalInfo.endDate)} ${DateFormat.Hm('en_US').format(festivalInfo.endDate)}", style: FontTheme.subtitle2,),
+                            Text("${DateFormat.yMMMd('en_US').format(festivalInfo.startDate)} ${DateFormat.Hm('en_US').format(festivalInfo.startDate)} ~ ${DateFormat.yMMMd('en_US').format(festivalInfo.endDate)} ${DateFormat.Hm('en_US').format(festivalInfo.endDate)}", style: FontTheme.subtitle3_greyLightest,),
                           ],
                         ),
                       ),
@@ -98,7 +94,7 @@ class FestivalInfoScreen extends HookWidget {
                           carouselController: carouselController.value,
                           items: [
                             info(festivalInfo),
-                            meets(festivalMeets),
+                            meets(festivalMeetSnapshot.data!.docs.map((e) => FestivalMeet.fromJson(e.data())).toList()),
                             members(festivalInfo.member, festivalProvider)
                           ],
                         )
@@ -114,6 +110,7 @@ class FestivalInfoScreen extends HookWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
+                  ColorTheme.blackPoint.withOpacity(1),
                   ColorTheme.blackPoint.withOpacity(0.8),
                   ColorTheme.blackPoint.withOpacity(0)
                 ]
@@ -143,7 +140,7 @@ class FestivalInfoScreen extends HookWidget {
   Widget tabBar(CarouselController carouselController, ValueNotifier<int> carouselPage) {
     List<String> tab = ["정보", "모임", "참여"];
     return Container(
-        height: 60,
+        height: 40,
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
         decoration: const BoxDecoration(
             border: Border(bottom: BorderSide(width: 1, color: ColorTheme.greyThickest)),
@@ -157,7 +154,7 @@ class FestivalInfoScreen extends HookWidget {
                 decoration: BoxDecoration(
                     border: Border(
                         bottom: (carouselPage.value == itemIndex) ?
-                        const BorderSide(width: 2, color: ColorTheme.white) :
+                        const BorderSide(width: 1, color: ColorTheme.white) :
                         BorderSide.none
                     )
                 ),
@@ -195,52 +192,56 @@ class FestivalInfoScreen extends HookWidget {
                 borderRadius: BorderRadius.circular(10),
                 color: ColorTheme.greyThickest
             ),
-            child: Text(festivalInfo.summary, style: FontTheme.subtitle2)
+            child: Text(festivalInfo.summary, style: FontTheme.subtitle1)
         ),
         const SizedBox(height: 15),
-        Text(festivalInfo.description, style: FontTheme.subtitle2)
+        Text(festivalInfo.description, style: FontTheme.subtitle1)
       ],
     );
   }
 
   Widget meets(List<FestivalMeet> meets) {
-    return ListView.builder(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-      itemCount: meets.length,
-      itemBuilder: (context, index) {
-        FestivalMeet meet = meets[index];
-        return Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(meet.title, style: FontTheme.headline3),
-              const SizedBox(height: 10),
-              Text("${meet.startDate} ~ ${meet.endDate}", style: FontTheme.subtitle2),
-              const SizedBox(height: 15),
-              SizedBox(
-                height: 25,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: meet.limit,
-                  itemBuilder: (context, userIndex) {
-                    return Container(
-                      width: 25,
-                      height: 25,
-                      margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: ColorTheme.greyThickest,
-                        border: Border.all(width: 1, color: ColorTheme.greyThick)
-                      ),
-                    );
-                  }
-                ),
+    return (meets.isEmpty) ?
+        const Center(
+          child: ZeroContent()
+        ) :
+        ListView.builder(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+          itemCount: meets.length,
+          itemBuilder: (context, index) {
+            FestivalMeet meet = meets[index];
+            return Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(meet.title, style: FontTheme.subtitle1_bold),
+                  const SizedBox(height: 10),
+                  Text("${meet.startDate} ~ ${meet.endDate}", style: FontTheme.subtitle3),
+                  const SizedBox(height: 15),
+                  SizedBox(
+                    height: 25,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: meet.limit,
+                      itemBuilder: (context, userIndex) {
+                        return Container(
+                          width: 25,
+                          height: 25,
+                          margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: ColorTheme.greyThickest,
+                            border: Border.all(width: 1, color: ColorTheme.greyThick)
+                          ),
+                        );
+                      }
+                    ),
+                  )
+                ]
               )
-            ]
-          )
+            );
+          },
         );
-      },
-    );
   }
 
   Widget members(List<dynamic> members, FestivalProvider festivalProvider) {
@@ -257,57 +258,61 @@ class FestivalInfoScreen extends HookWidget {
     return (membersData.hasError) ?
         const Center(child: Text("error has occurred", style: FontTheme.subtitle2,)) :
         (membersData.hasData) ?
-            ListView.builder(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-              itemCount: membersMap.length,
-              itemBuilder: (context, index) {
-                User member = membersMap[index];
-                return Row(
-                  children: [
-                    ExtendedImage.network(
-                      member.profileImage,
-                      width: 50,
-                      height: 50,
-                      cache: true,
-                      fit: BoxFit.cover,
-                      shape: BoxShape.circle,
-                      loadStateChanged: (state) {
-                        switch (state.extendedImageLoadState) {
-                          case LoadState.loading:
-                            return Container(
-                              width: 50,
-                              height: 50,
-                              color: ColorTheme.greyThickest,
-                            );
-                          case LoadState.completed:
-                            return ExtendedRawImage(
-                              width: 50,
-                              height: 50,
-                              fit: BoxFit.cover,
-                              image: state.extendedImageInfo?.image,
-                            );
-                          case LoadState.failed:
-                            return Container(
-                              width: 50,
-                              height: 50,
-                              color: ColorTheme.greyThickest,
-                            );
-                        }
-                      },
-                    ),
-                    const SizedBox(width: 15),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+            (membersMap.isEmpty) ?
+                const Center(
+                  child: ZeroContent(),
+                ) :
+                ListView.builder(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                  itemCount: membersMap.length,
+                  itemBuilder: (context, index) {
+                    User member = membersMap[index];
+                    return Row(
                       children: [
-                        Text(membersMap[index].nickname, style: FontTheme.subtitle2Bold,),
-                        const SizedBox(height: 5),
-                        Text("${member.role} @${member.belong}", style: FontTheme.subtitle2GreyLightest,)
+                        ExtendedImage.network(
+                          member.profileImage,
+                          width: 50,
+                          height: 50,
+                          cache: true,
+                          fit: BoxFit.cover,
+                          shape: BoxShape.circle,
+                          loadStateChanged: (state) {
+                            switch (state.extendedImageLoadState) {
+                              case LoadState.loading:
+                                return Container(
+                                  width: 50,
+                                  height: 50,
+                                  color: ColorTheme.greyThickest,
+                                );
+                              case LoadState.completed:
+                                return ExtendedRawImage(
+                                  width: 50,
+                                  height: 50,
+                                  fit: BoxFit.cover,
+                                  image: state.extendedImageInfo?.image,
+                                );
+                              case LoadState.failed:
+                                return Container(
+                                  width: 50,
+                                  height: 50,
+                                  color: ColorTheme.greyThickest,
+                                );
+                            }
+                          },
+                        ),
+                        const SizedBox(width: 15),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(membersMap[index].nickname, style: FontTheme.subtitle2Bold,),
+                            const SizedBox(height: 5),
+                            Text("${member.role} @${member.belong}", style: FontTheme.subtitle2_greyLightest,)
+                          ],
+                        ),
                       ],
-                    ),
-                  ],
-                );
-              },
-            ):
+                    );
+                  },
+                ):
             const Center(child: CircularProgressIndicator());
   }
 }

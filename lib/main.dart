@@ -1,6 +1,7 @@
 import 'package:capybara/firebase_options.dart';
 import 'package:capybara/src/config/routes.dart';
 import 'package:capybara/src/provider/festival_provider.dart';
+import 'package:capybara/src/theme/color_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -33,6 +34,11 @@ class App extends StatelessWidget {
       routeInformationProvider: router.routeInformationProvider,
       routeInformationParser: router.routeInformationParser,
       routerDelegate: router.routerDelegate,
+      theme: const CupertinoThemeData(
+        textTheme: CupertinoTextThemeData(
+          textStyle: TextStyle(fontSize: 14, fontFamily: 'Pretendard', color: ColorTheme.white)
+        )
+      ),
     );
   }
 }

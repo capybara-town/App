@@ -5,9 +5,11 @@ import 'package:capybara/src/theme/font_theme.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -46,8 +48,6 @@ class FestivalScreen extends HookWidget {
     if (!(festivalConfigSnapshot.hasError) && festivalConfigSnapshot.hasData) {
       festivalConfig = festivalConfigSnapshot.data!.data() as Map<String, dynamic>;
     }
-
-    print("hi!!!");
 
     return SafeArea(
       bottom: false,
@@ -122,14 +122,11 @@ class FestivalScreen extends HookWidget {
         carouselController: carouselController,
         itemCount: festivalConfig['value'].length,
         itemBuilder: (context, itemIndex, pageViewIndex) {
-          return Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-            child: ListView.builder(
-              itemCount: (festivals[festivalConfig['value'][carouselPage.value]] != null) ? festivals[festivalConfig['value'][carouselPage.value]].length : 0,
-              itemBuilder: (context, index) {
-                return festivalItem(context, festivalsSnapshot[index], festivals[festivalConfig['value'][carouselPage.value]][index]);
-              },
-            ),
+          return ListView.builder(
+            itemCount: (festivals[festivalConfig['value'][carouselPage.value]] != null) ? festivals[festivalConfig['value'][carouselPage.value]].length : 0,
+            itemBuilder: (context, index) {
+              return festivalItem(context, festivalsSnapshot[index], festivals[festivalConfig['value'][carouselPage.value]][index]);
+            },
           );
         }
     );
@@ -144,35 +141,73 @@ class FestivalScreen extends HookWidget {
         context.push(Routes.FESTIVAL_INFO, extra: {"pk": festivalInfo.pk});
       },
       child: Container(
-        padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
         color: ColorTheme.blackPoint,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              child: Image.network(festivalInfo.thumbnail),
+            ExtendedImage.network(
+              festivalInfo.thumbnail,
+              width: double.infinity,
+              height: 250,
+              cache: true,
+              fit: BoxFit.cover,
               borderRadius: BorderRadius.circular(15),
+              loadStateChanged: (state) {
+                switch (state.extendedImageLoadState) {
+                  case LoadState.loading:
+                    return Container(
+                      width: double.infinity,
+                      height: 250,
+                      decoration: BoxDecoration(
+                        color: ColorTheme.greyThickest
+                      ),
+                    );
+                  case LoadState.completed:
+                    return ExtendedRawImage(
+                      width: double.infinity,
+                      height: 250,
+                      fit: BoxFit.cover,
+                      image: state.extendedImageInfo?.image,
+                    );
+                  case LoadState.failed:
+                    return Container(
+                      width: 250,
+                      height: 250,
+                      color: ColorTheme.greyThickest,
+                    );
+                }
+              },
             ),
-            const SizedBox(height: 15),
-            Text(festivalInfo.title, style: FontTheme.headline3),
-            const SizedBox(height: 10),
-            Text(festivalInfo.summary, style: FontTheme.subtitle1,),
-            const SizedBox(height: 10),
-            Text("${DateFormat.yMMMd('en_US').format(festivalInfo.startDate)} ${DateFormat.Hm('en_US').format(festivalInfo.startDate)} ~ ${DateFormat.yMMMd('en_US').format(festivalInfo.endDate)} ${DateFormat.Hm('en_US').format(festivalInfo.endDate)}", style: FontTheme.subtitle2),
-            const SizedBox(height: 15),
-            Row(
-              children: [
-                Stack(
-                  children: [
-                    userCircle(0),
-                    userCircle(15),
-                    userCircle(30)
-                  ]
-                ),
-                const SizedBox(width: 10),
-                Text("${festivalInfo.member.length}명", style: FontTheme.subtitle2PointBold),
-                const Text("이 참여했어요", style: FontTheme.subtitle2Point)
-              ],
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 15, 20, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(festivalInfo.title, style: FontTheme.subtitle1WhiteBold),
+                  const SizedBox(height: 10),
+                  Text(festivalInfo.summary, style: FontTheme.subtitle2_greyLightest,),
+                  const SizedBox(height: 10),
+                  Text(
+                      (DateFormat.yMMMd('en_US').format(festivalInfo.startDate) == DateFormat.yMMMd('en_US').format(festivalInfo.endDate)) ?
+                          DateFormat.yMMMd('en_US').format(festivalInfo.startDate).toString() :
+                          "${DateFormat.yMMMd('en_US').format(festivalInfo.startDate)} ~ ${DateFormat.yMMMd('en_US').format(festivalInfo.endDate)}",
+                      style: FontTheme.subtitle3_greyLightest
+                  ),
+                  const SizedBox(height: 15),
+                  Row(
+                    children: [
+                      SvgPicture.asset("asset/image/user.svg", width: 15, height: 15),
+                      const SizedBox(width: 5),
+                      Text("${festivalInfo.member.length}명", style: FontTheme.subtitle3_point),
+                      const SizedBox(width: 15),
+                      SvgPicture.asset("asset/image/map-pin.svg", width: 15, height: 15, color: ColorTheme.capybaraPoint),
+                      const SizedBox(width: 5),
+                      Text(festivalInfo.locationName, style: FontTheme.subtitle3_point)
+                    ],
+                  ),
+                ],
+              ),
             )
           ]
         )
