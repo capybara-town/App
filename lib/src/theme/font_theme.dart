@@ -10,14 +10,20 @@ class FontTheme {
   static const TextStyle headline3 = TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: ColorTheme.white);
   static const TextStyle subtitle1 = TextStyle(fontSize: 16, fontWeight: FontWeight.w300, color: ColorTheme.white);
   static const TextStyle subtitle2 = TextStyle(fontSize: 14, fontWeight: FontWeight.w300, color: ColorTheme.white);
+  static const TextStyle subtitle3 = TextStyle(fontSize: 12, fontWeight: FontWeight.w300, color: ColorTheme.white);
 
+  static const TextStyle subtitle1GreyLightest = TextStyle(fontSize: 16, fontWeight: FontWeight.w300, color: ColorTheme.greyLightest);
   static const TextStyle subtitle1WhiteBold = TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: ColorTheme.white);
   static const TextStyle subtitle1GreyBold = TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: ColorTheme.greyPoint);
+  static const TextStyle subtitle1_bold = TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: ColorTheme.white);
   static const TextStyle subtitle1BlackBold = TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: ColorTheme.blackPoint);
   static const TextStyle subtitle2Bold = TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: ColorTheme.white);
-  static const TextStyle subtitle2GreyLightest = TextStyle(fontSize: 14, fontWeight: FontWeight.w300, color: ColorTheme.greyLightest);
+  static const TextStyle subtitle2_greyLightest = TextStyle(fontSize: 14, fontWeight: FontWeight.w300, color: ColorTheme.greyLightest);
   static const TextStyle subtitle2Point = TextStyle(fontSize: 14, fontWeight: FontWeight.w300, color: ColorTheme.capybaraPoint);
   static const TextStyle subtitle2PointBold = TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: ColorTheme.capybaraPoint);
+
+  static const TextStyle subtitle3_greyLightest = TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: ColorTheme.greyLightest);
+  static const TextStyle subtitle3_point = TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: ColorTheme.capybaraPoint);
 
   static TextStyle gradientYellow = TextStyle(fontSize: 26, fontWeight: FontWeight.w600,
       foreground: Paint()..shader = const LinearGradient(

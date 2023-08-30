@@ -3,6 +3,7 @@ import 'dart:ui';
 class ColorTheme {
   static const Color redPoint = Color(0xffFF5437);
   static const Color greyLightest = Color(0xffC3C3C1);
+  static const Color greyLight = Color(0xffA1A19D);
   static const Color greyPoint = Color(0xff65625A);
   static const Color greyThick = Color(0xff45433F);
   static const Color greyThickest = Color(0xff262523);
