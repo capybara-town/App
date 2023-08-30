@@ -4,20 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5aea45e9-f2a3-4356-9e76-e0c72655e4fe" name="Changes" comment="카카오 로그인 연결 (Android Manifest 추가)">
-      <change afterPath="$PROJECT_DIR$/asset/font/Pretendard-Black.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/asset/font/Pretendard-Bold.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/asset/font/Pretendard-ExtraBold.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/asset/font/Pretendard-ExtraLight.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/asset/font/Pretendard-Light.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/asset/font/Pretendard-Medium.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/asset/font/Pretendard-Regular.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/asset/font/Pretendard-SemiBold.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/asset/font/Pretendard-Thin.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/asset/image/character.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/asset/image/user.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ios/Runner/Storage.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/component/zero_content.dart" afterDir="false" />
+    <list default="true" id="5aea45e9-f2a3-4356-9e76-e0c72655e4fe" name="Changes" comment="폰트 변경">
       <change beforePath="$PROJECT_DIR$/.dart_tool/dartpad/web_plugin_registrant.dart" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/dartpad/web_plugin_registrant.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/327b1c0ae14dfa58322e3720f6878565/.filecache" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/flutter_build/327b1c0ae14dfa58322e3720f6878565/.filecache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/327b1c0ae14dfa58322e3720f6878565/app.dill" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/flutter_build/327b1c0ae14dfa58322e3720f6878565/app.dill" afterDir="false" />
@@ -37,8 +24,6 @@
       <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/526a2667667f1b6940579e2559c6d019/outputs.json" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/flutter_build/526a2667667f1b6940579e2559c6d019/outputs.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.dart_tool/package_config.json" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/package_config.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.dart_tool/package_config_subset" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/package_config_subset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/9d5f0381dd5c964116fbdbb245c8a45d/gen_dart_plugin_registrant.stamp" beforeDir="false" afterPath="$PROJECT_DIR$/build/9d5f0381dd5c964116fbdbb245c8a45d/gen_dart_plugin_registrant.stamp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/9e4bc574c6cb5a039ebbbff8f1476b2a.cache.dill.track.dill" beforeDir="false" afterPath="$PROJECT_DIR$/build/9e4bc574c6cb5a039ebbbff8f1476b2a.cache.dill.track.dill" afterDir="false" />
@@ -473,14 +458,6 @@
       <change beforePath="$PROJECT_DIR$/build/ios/iphonesimulator/Runner.app/Runner" beforeDir="false" afterPath="$PROJECT_DIR$/build/ios/iphonesimulator/Runner.app/Runner" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/ios/iphonesimulator/Runner.app/_CodeSignature/CodeResources" beforeDir="false" afterPath="$PROJECT_DIR$/build/ios/iphonesimulator/Runner.app/_CodeSignature/CodeResources" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/ios/pod_inputs.fingerprint" beforeDir="false" afterPath="$PROJECT_DIR$/build/ios/pod_inputs.fingerprint" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Podfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Podfile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/config/routes.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/config/routes.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/screen/festival/festival_info_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/screen/festival/festival_info_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/screen/festival/festival_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/screen/festival/festival_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/theme/color_theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/theme/color_theme.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/theme/font_theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/theme/font_theme.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -622,7 +599,14 @@
       <option name="project" value="LOCAL" />
       <updated>1693287762744</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="폰트 변경">
+      <created>1693364168697</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1693364168697</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -659,6 +643,7 @@
     <MESSAGE value="firebase 붙이기, festival 추가" />
     <MESSAGE value="festivals firebase 붙이기, groupby로 festivals 그룹핑" />
     <MESSAGE value="festival info 화면 추가, festival info firebase 연결" />
-    <option name="LAST_COMMIT_MESSAGE" value="festival info 화면 추가, festival info firebase 연결" />
+    <MESSAGE value="폰트 변경" />
+    <option name="LAST_COMMIT_MESSAGE" value="폰트 변경" />
   </component>
 </project>
