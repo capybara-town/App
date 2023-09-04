@@ -1,20 +1,15 @@
+import 'package:capybara/src/component/zero_content.dart';
 import 'package:capybara/src/config/routes.dart';
 import 'package:capybara/src/provider/festival_provider.dart';
 import 'package:capybara/src/theme/color_theme.dart';
-import 'package:capybara/src/theme/font_theme.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
-import '../../component/bounce.dart';
 import '../../component/bounce_grey.dart';
 import '../../model/festival/festival_info.dart';
 
@@ -25,14 +20,12 @@ class FestivalScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    final FestivalProvider festivalProvider = Provider.of<FestivalProvider>(context);
-
-    final carouselController = useState(CarouselController());
-    final carouselPage = useState(0);
+    final FestivalProvider festivalProvider = Provider.of<FestivalProvider>(
+        context);
 
     final snapshotFuture = useMemoized(() => festivalProvider.getFestivals());
-    final festivalConfigFuture = useMemoized(() => festivalProvider.getFestivalConfig());
+    final festivalConfigFuture = useMemoized(() =>
+        festivalProvider.getFestivalConfig());
     final snapshot = useFuture(snapshotFuture);
     final festivalConfigSnapshot = useFuture(festivalConfigFuture);
 
@@ -46,89 +39,67 @@ class FestivalScreen extends HookWidget {
     }
 
     if (!(festivalConfigSnapshot.hasError) && festivalConfigSnapshot.hasData) {
-      festivalConfig = festivalConfigSnapshot.data!.data() as Map<String, dynamic>;
+      festivalConfig =
+      festivalConfigSnapshot.data!.data() as Map<String, dynamic>;
     }
 
     return SafeArea(
-      bottom: false,
-      child: (festivalConfigSnapshot.hasError && snapshot.hasError) ?
-          const Center(child: Text("error has occured")) :
-          (festivalConfigSnapshot.hasData && snapshot.hasData) ?
-              Column(
+        bottom: false,
+        child: (festivalConfigSnapshot.hasError && snapshot.hasError) ?
+        const Center(child: Text("error has occured")) :
+        (festivalConfigSnapshot.hasData && snapshot.hasData) ?
+        DefaultTabController(
+          length: festivalConfig['value'].length,
+          child: Scaffold(
+            backgroundColor: ColorTheme.greyThickest,
+            appBar: AppBar(
+              backgroundColor: ColorTheme.blackPoint,
+              bottom: TabBar(tabs: [
+                for (int index = 0; index <
+                    festivalConfig['value'].length; index++)
+                  Tab(text: festivalConfig['value'][index])
+              ],
+                splashFactory: NoSplash.splashFactory,
+                isScrollable: true,
+                tabAlignment: TabAlignment.start,
+                indicatorSize: TabBarIndicatorSize.tab,
+                padding: const EdgeInsets.only(left: 20),
+                labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                labelColor: ColorTheme.white,
+                unselectedLabelColor: ColorTheme.greyPoint,
+                unselectedLabelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                dividerColor: ColorTheme.greyThickest,
+                indicator: UnderlineTabIndicator(
+                  borderSide: const BorderSide(
+                      width: 1, color: ColorTheme.white),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                overlayColor: MaterialStateProperty.resolveWith((states) =>
+                states.contains(MaterialState.focused)
+                    ? null
+                    : ColorTheme.greyThickest),
+              ),
+            ),
+            body: TabBarView(
                 children: [
-                  tabBar(carouselController.value, carouselPage, festivalConfig),
-                  Expanded(
-                    child: tabContent(carouselController.value, carouselPage, snapshot.data!.docs, festivalConfigSnapshot.data!.data() as Map<String, dynamic>, groupFestivals)
-                  )
+                  for (int index = 0; index < festivalConfig['value'].length; index++)
+                    (groupFestivals[festivalConfig['value'][index]] != null) ?
+                        ListView.builder(
+                          itemCount: (groupFestivals[festivalConfig['value'][index]] !=
+                              null) ? groupFestivals[festivalConfig['value'][index]]
+                              .length : 0,
+                          itemBuilder: (context, pageIndex) {
+                            return festivalItem(
+                                context, snapshot.data!.docs[pageIndex],
+                                groupFestivals[festivalConfig['value'][index]][pageIndex]);
+                          },
+                        ) :
+                        const ZeroContent()
                 ]
-              ) :
-              const Center(child: CircularProgressIndicator())
-    );
-  }
-
-  Widget tabBar(CarouselController carouselController, ValueNotifier<int> carouselPage, Map<String, dynamic> festivalConfig) {
-
-    return Container(
-      height: 60,
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-      decoration: const BoxDecoration(
-          border: Border(bottom: BorderSide(width: 1, color: ColorTheme.greyThickest)),
-          color: ColorTheme.blackPoint
-      ),
-      child: ListView.builder(
-          itemCount: festivalConfig['value'].length,
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (context, itemIndex) {
-            return AnimatedContainer(
-              decoration: BoxDecoration(
-                  border: Border(
-                      bottom: (carouselPage.value == itemIndex) ?
-                      const BorderSide(width: 2, color: ColorTheme.white) :
-                      BorderSide.none
-                  )
-              ),
-              duration: const Duration(milliseconds: 100),
-              child: BounceGrey(
-                  onTap: () {
-                    carouselController.animateToPage(itemIndex, duration: const Duration(milliseconds: 200), curve: Curves.easeOutCirc);
-                    carouselPage.value = itemIndex;
-                  },
-                  activeColor: ColorTheme.greyThickest,
-                  paddingHorizontal: 5,
-                  paddingVertical: 0,
-                  radius: 5,
-                  scale: 0.8,
-                  child: Container(
-                    color: ColorTheme.greyThickest.withOpacity(0),
-                    padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                    child: Center(child: Text(festivalConfig['value'][itemIndex].toString(), style: carouselPage.value == itemIndex ? FontTheme.subtitle1WhiteBold : FontTheme.subtitle1GreyBold)),
-                  )
-              ),
-            );
-          }
-      )
-    );
-  }
-
-  Widget tabContent(CarouselController carouselController, ValueNotifier<int> carouselPage, List<QueryDocumentSnapshot<Map<String, dynamic>>> festivalsSnapshot, Map<String, dynamic> festivalConfig, Map<String, dynamic> festivals) {
-
-    return CarouselSlider.builder(
-        options: CarouselOptions(
-          height: double.infinity,
-          viewportFraction: 1,
-          enableInfiniteScroll: false,
-          scrollPhysics: const NeverScrollableScrollPhysics()
-        ),
-        carouselController: carouselController,
-        itemCount: festivalConfig['value'].length,
-        itemBuilder: (context, itemIndex, pageViewIndex) {
-          return ListView.builder(
-            itemCount: (festivals[festivalConfig['value'][carouselPage.value]] != null) ? festivals[festivalConfig['value'][carouselPage.value]].length : 0,
-            itemBuilder: (context, index) {
-              return festivalItem(context, festivalsSnapshot[index], festivals[festivalConfig['value'][carouselPage.value]][index]);
-            },
-          );
-        }
+            ),
+          ),
+        ) :
+        const Center(child: CircularProgressIndicator())
     );
   }
 
@@ -136,82 +107,97 @@ class FestivalScreen extends HookWidget {
 
     FestivalInfo festivalInfo = FestivalInfo.fromJson(festival);
 
-    return Bounce(
-      onTap: () {
-        context.push(Routes.FESTIVAL_INFO, extra: {"pk": festivalInfo.pk});
-      },
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
-        color: ColorTheme.blackPoint,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ExtendedImage.network(
-              festivalInfo.thumbnail,
-              width: double.infinity,
-              height: 250,
-              cache: true,
-              fit: BoxFit.cover,
-              borderRadius: BorderRadius.circular(15),
-              loadStateChanged: (state) {
-                switch (state.extendedImageLoadState) {
-                  case LoadState.loading:
-                    return Container(
-                      width: double.infinity,
-                      height: 250,
-                      decoration: BoxDecoration(
-                        color: ColorTheme.greyThickest
-                      ),
-                    );
-                  case LoadState.completed:
-                    return ExtendedRawImage(
-                      width: double.infinity,
-                      height: 250,
-                      fit: BoxFit.cover,
-                      image: state.extendedImageInfo?.image,
-                    );
-                  case LoadState.failed:
-                    return Container(
-                      width: 250,
-                      height: 250,
-                      color: ColorTheme.greyThickest,
-                    );
-                }
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 15, 20, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(festivalInfo.title, style: FontTheme.subtitle1WhiteBold),
-                  const SizedBox(height: 10),
-                  Text(festivalInfo.summary, style: FontTheme.subtitle2_greyLightest,),
-                  const SizedBox(height: 10),
-                  Text(
-                      (DateFormat.yMMMd('en_US').format(festivalInfo.startDate) == DateFormat.yMMMd('en_US').format(festivalInfo.endDate)) ?
-                          DateFormat.yMMMd('en_US').format(festivalInfo.startDate).toString() :
-                          "${DateFormat.yMMMd('en_US').format(festivalInfo.startDate)} ~ ${DateFormat.yMMMd('en_US').format(festivalInfo.endDate)}",
-                      style: FontTheme.subtitle3_greyLightest
-                  ),
-                  const SizedBox(height: 15),
-                  Row(
+    return Column(
+      children: [
+        BounceGrey(
+          onTap: () {
+            context.push(Routes.FESTIVAL_INFO, extra: {"pk": festivalInfo.pk});
+          },
+          paddingHorizontal: 20,
+          paddingVertical: 15,
+          radius: 8,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SvgPicture.asset("asset/image/user.svg", width: 15, height: 15),
-                      const SizedBox(width: 5),
-                      Text("${festivalInfo.member.length}명", style: FontTheme.subtitle3_point),
-                      const SizedBox(width: 15),
-                      SvgPicture.asset("asset/image/map-pin.svg", width: 15, height: 15, color: ColorTheme.capybaraPoint),
-                      const SizedBox(width: 5),
-                      Text(festivalInfo.locationName, style: FontTheme.subtitle3_point)
+                      Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: const Color(0xff3F3D39)
+                        ),
+                        child: const Text("컨퍼런스", style: TextStyle(fontSize: 10, color: Color(0xffB6B6AD), fontWeight: FontWeight.w600))
+                      ),
+                      const SizedBox(height: 8),
+                      Text(festivalInfo.title, style: const TextStyle(fontSize: 14, color: ColorTheme.white)),
+                      const SizedBox(height: 8),
+                      Text(festivalInfo.summary, style: const TextStyle(fontSize: 12, color: ColorTheme.greyLightest)),
                     ],
                   ),
-                ],
-              ),
-            )
-          ]
-        )
-      )
+                ),
+                const SizedBox(width: 10),
+                ExtendedImage.network(
+                  festivalInfo.thumbnail,
+                  width: 60,
+                  height: 60,
+                  cache: true,
+                  fit: BoxFit.cover,
+                  borderRadius: BorderRadius.circular(10),
+                  loadStateChanged: (state) {
+                    switch (state.extendedImageLoadState) {
+                      case LoadState.loading:
+                        return Container(
+                          width: 60,
+                          height: 60,
+                          decoration: const BoxDecoration(
+                              color: ColorTheme.greyThickest
+                          ),
+                        );
+                      case LoadState.completed:
+                        return Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(width: 1, color: ColorTheme.greyThick)
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: ExtendedRawImage(
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.cover,
+                              image: state.extendedImageInfo?.image,
+                            ),
+                          ),
+                        );
+                      case LoadState.failed:
+                        return Container(
+                          width: 60,
+                          height: 60,
+                          color: ColorTheme.greyThickest,
+                        );
+                    }
+                  },
+                ),
+              ]),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Text(festivalInfo.startDate.toString(), style: const TextStyle(fontSize: 12, color: Color(0xff86867D))),
+                  const Spacer(),
+                  SvgPicture.asset('asset/image/users.svg'),
+                  const SizedBox(width: 3),
+                  Text("${festivalInfo.member.length}", style: const TextStyle(fontSize: 12, color: Color(0xff86867D)))
+                ]
+              )
+            ]
+          )
+        ),
+        divider()
+      ],
     );
   }
 
@@ -225,6 +211,16 @@ class FestivalScreen extends HookWidget {
         color: ColorTheme.greyThickest,
         border: Border.all(width: 3, color: ColorTheme.blackPoint)
       ),
+    );
+  }
+
+  Widget divider()
+  {
+    return Container(
+        margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+        width: double.infinity,
+        height: 1,
+        color: const Color(0xff302E2C)
     );
   }
 }

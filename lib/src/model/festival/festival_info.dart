@@ -11,6 +11,8 @@ class FestivalInfo {
   final String locationName;
   final int fee;
   final List<dynamic> member;
+  final List<dynamic> meets;
+  final List<dynamic> descriptionImage;
 
   FestivalInfo({
     required this.pk,
@@ -24,7 +26,9 @@ class FestivalInfo {
     required this.location,
     required this.locationName,
     required this.fee,
-    required this.member
+    required this.member,
+    required this.meets,
+    required this.descriptionImage
   });
 
   factory FestivalInfo.fromJson(Map<String, dynamic> json) {
@@ -40,7 +44,9 @@ class FestivalInfo {
       location: json['location'],
       locationName: json['location_name'],
       fee: json['fee'],
-      member: json['member'].toList()
+      member: json['member'].toList(),
+      meets: json['meets'].toList(),
+      descriptionImage: json['description_image'].toList()
     );
   }
 
@@ -57,7 +63,9 @@ class FestivalInfo {
       "location": location,
       "location_name": locationName,
       "fee": fee,
-      "member": member
+      "member": member,
+      "meets": meets,
+      "description_image": descriptionImage
     };
   }
 }

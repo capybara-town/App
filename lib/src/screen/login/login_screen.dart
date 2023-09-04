@@ -1,5 +1,6 @@
 import 'package:capybara/src/component/bounce.dart';
 import 'package:capybara/src/config/routes.dart';
+import 'package:capybara/src/provider/user_provider.dart';
 import 'package:capybara/src/theme/color_theme.dart';
 import 'package:capybara/src/theme/font_theme.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:provider/provider.dart';
 
 
 class LoginScreen extends StatelessWidget {
@@ -15,9 +17,9 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
+    return Scaffold(
       backgroundColor: ColorTheme.blackPoint,
-      child: Stack(
+      body: Stack(
         children: [
           ListView.builder(
             itemCount: 10,
@@ -25,7 +27,7 @@ class LoginScreen extends StatelessWidget {
                 return Container(
                   height: 186,
                   margin: const EdgeInsets.only(left: 32, right: 32, bottom: 25),
-                  decoration: const BoxDecoration( color: ColorTheme.greyPoint),
+                  decoration: const BoxDecoration(color: ColorTheme.greyPoint),
                 );
               }),
           Container(
@@ -78,6 +80,9 @@ class LoginScreen extends StatelessWidget {
   }
 
   Widget kakaoButton(BuildContext context) {
+
+    UserProvider userProvider = Provider.of(context);
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
       child: Bounce(
@@ -86,7 +91,14 @@ class LoginScreen extends StatelessWidget {
             try {
               await UserApi.instance.loginWithKakaoTalk();
               print('카카오톡으로 로그인 성공');
-              context.go(Routes.FRAME);
+              try {
+                User user = await UserApi.instance.me();
+                userProvider.me = user;
+                print(user.id);
+                context.go(Routes.FRAME);
+              } catch (error) {
+                print('사용자 정보 요청 실패 $error');
+              }
             } catch (error) {
               print('카카오톡으로 로그인 실패 $error');
 
@@ -99,6 +111,14 @@ class LoginScreen extends StatelessWidget {
               try {
                 await UserApi.instance.loginWithKakaoAccount();
                 print('카카오계정으로 로그인 성공');
+                try {
+                  User user = await UserApi.instance.me();
+                  userProvider.me = user;
+                  print(user.id);
+                  context.go(Routes.FRAME);
+                } catch (error) {
+                  print('사용자 정보 요청 실패 $error');
+                }
               } catch (error) {
                 print('카카오계정으로 로그인 실패 $error');
               }
@@ -107,7 +127,14 @@ class LoginScreen extends StatelessWidget {
             try {
               await UserApi.instance.loginWithKakaoAccount();
               print('카카오계정으로 로그인 성공');
-              context.go(Routes.FRAME);
+              try {
+                User user = await UserApi.instance.me();
+                userProvider.me = user;
+                print(user.id);
+                context.go(Routes.FRAME);
+              } catch (error) {
+                print('사용자 정보 요청 실패 $error');
+              }
             } catch (error) {
               print('카카오계정으로 로그인 실패 $error');
             }

@@ -1,41 +1,23 @@
-import '../user.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class FestivalMeet {
-  final String title;
-  final String description;
-  final DateTime startDate;
-  final DateTime endDate;
-  final List<dynamic> members;
-  final int limit;
+part 'festival_meet.freezed.dart';
+part 'festival_meet.g.dart';
 
-  FestivalMeet({
-    required this.title,
-    required this.description,
-    required this.startDate,
-    required this.endDate,
-    required this.members,
-    required this.limit
-  });
+@freezed
+class FestivalMeet with _$FestivalMeet {
 
-  factory FestivalMeet.fromJson(Map<String, dynamic> json) {
-    return FestivalMeet(
-      title: json['title'],
-      description: json['description'],
-      startDate: DateTime.parse(json['start_date'].toDate().toString()),
-      endDate: DateTime.parse(json['end_date'].toDate().toString()),
-      members: json['members'],
-      limit: json['limit']
-    );
-  }
+  const factory FestivalMeet({
+    required String id,
+    required String title,
+    required String description,
+    required DateTime startDate,
+    required DateTime endDate,
+    required List<dynamic> members,
+    required int limit,
+    required String location,
+    required String fee,
+    required String manager
+  }) = _FestivalMeet;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'title': title,
-      'description': description,
-      'start_date': startDate,
-      'end_date': endDate,
-      'members': members,
-      'limit': limit
-    };
-  }
+  factory FestivalMeet.fromJson(Map<String, Object?> json) => _$FestivalMeetFromJson(json);
 }

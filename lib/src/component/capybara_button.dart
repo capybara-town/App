@@ -5,19 +5,17 @@ import 'package:flutter/cupertino.dart';
 
 import '../theme/color_theme.dart';
 
-class BounceButton extends StatefulWidget {
-  const BounceButton({
+class CapybaraButton extends StatefulWidget {
+  const CapybaraButton({
     Key? key,
     required this.onTap,
     required this.width,
-    this.height = 70,
+    this.height = 60,
     this.scale = 0.95,
     required this.text,
-    this.activeColor = ColorTheme.capybaraPoint,
-    this.color = ColorTheme.capybaraPoint,
-    this.textStyle = const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+    this.textStyle = const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: ColorTheme.white),
+    this.background = ColorTheme.redPoint,
     this.active = true,
-    this.inactiveColor = ColorTheme.greyLightest
   }) : super(key: key);
 
   final Function() onTap;
@@ -25,17 +23,15 @@ class BounceButton extends StatefulWidget {
   final double height;
   final double scale;
   final String text;
-  final Color activeColor;
-  final Color color;
   final TextStyle? textStyle;
+  final Color background;
   final bool active;
-  final Color inactiveColor;
 
   @override
-  State<BounceButton> createState() => _ButtonAnimState();
+  State<CapybaraButton> createState() => _ButtonAnimState();
 }
 
-class _ButtonAnimState extends State<BounceButton> with SingleTickerProviderStateMixin {
+class _ButtonAnimState extends State<CapybaraButton> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -107,8 +103,8 @@ class _ButtonAnimState extends State<BounceButton> with SingleTickerProviderStat
                 duration: const Duration(milliseconds: 150),
                 curve: Curves.easeInOut,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: (widget.active) ? (tapDown) ? widget.activeColor : widget.color : widget.inactiveColor,
+                  borderRadius: BorderRadius.circular(100),
+                  color: widget.background
                 ),
                 width: widget.width,
                 height: widget.height,

@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../../theme/color_theme.dart';
 
@@ -7,8 +7,11 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text("Home Screen")
+    return const Scaffold(
+      backgroundColor: ColorTheme.blackPoint,
+      body: Center(
+        child: Text("Home Screen")
+      ),
     );
   }
 }

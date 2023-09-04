@@ -1,11 +1,14 @@
+import 'package:capybara/src/provider/user_provider.dart';
 import 'package:capybara/src/screen/bnb/home_screen.dart';
 import 'package:capybara/src/screen/bnb/second_screen.dart';
 import 'package:capybara/src/screen/festival/festival_screen.dart';
 import 'package:capybara/src/screen/login/login_screen.dart';
+import 'package:capybara/src/screen/user/profile_screen.dart';
 import 'package:capybara/src/theme/color_theme.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:provider/provider.dart';
 
 import '../component/bounce_grey.dart';
@@ -17,18 +20,22 @@ class FrameScreen extends HookWidget {
   Widget build(BuildContext context) {
 
     final pageIndex = useState(0);
+    final UserProvider userProvider = Provider.of(context);
 
-    return CupertinoPageScaffold(
+    User me = userProvider.me;
+    String uid = me.id.toString();
+
+    return Scaffold(
       backgroundColor: ColorTheme.blackPoint,
-      child: Column(
+      body: Column(
         children: [
           Expanded(
             child: IndexedStack(
               index: pageIndex.value,
               children: [
-                const HomeScreen(),
+                FestivalScreen(),
                 const SecondScreen(),
-                FestivalScreen()
+                ProfileScreen(uid: uid, push: false),
               ]
             )
           ),
@@ -42,14 +49,16 @@ class FrameScreen extends HookWidget {
     return Container(
         width: double.infinity,
         color: ColorTheme.greyThickest,
-        padding: const EdgeInsets.fromLTRB(0, 0, 0, 13),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              item("그룹", 0, pageIndex.value == 0 ? "map-pin-solid.svg" : "map-pin-outline.svg", pageIndex),
-              item("탐색", 1, pageIndex.value == 1 ? "squares-2x2-solid.svg" : "squares-2x2-outline.svg", pageIndex),
-              item("행사", 2, pageIndex.value == 2 ? "ticket-solid.svg" : "ticket-outline.svg", pageIndex),
-            ]
+        child: SafeArea(
+          top: false,
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                item("행사", 0, pageIndex.value == 0 ? "map-pin-solid.svg" : "map-pin-outline.svg", pageIndex),
+                item("탐색", 1, pageIndex.value == 1 ? "squares-2x2-solid.svg" : "squares-2x2-outline.svg", pageIndex),
+                item("프로필", 2, pageIndex.value == 2 ? "ticket-solid.svg" : "ticket-outline.svg", pageIndex),
+              ]
+          ),
         )
     );
   }
