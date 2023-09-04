@@ -9,5 +9,6 @@ class ColorTheme {
   static const Color greyThickest = Color(0xff262523);
   static const Color blackPoint = Color(0xff181817);
   static const Color capybaraPoint = Color(0xffFFA701);
+  static const Color capybaraOrangePoint = Color(0xffFF6E01);
   static const Color white = Color(0xffFFFFFF);
 }
